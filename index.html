@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Surprise 🎁</title>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff8fa3;
+            --bg: #fff0f3;
+            --text: #590d22;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Container Kartu Awal */
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 350px;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.5s, opacity 0.5s;
+        }
+
+        h1 { color: var(--primary); margin-bottom: 10px; }
+        
+        /* Ini style paragraf umum (gelap) */
+        p { color: var(--text); margin-bottom: 30px; line-height: 1.6; }
+        
+        h3 { color: var(--text); margin-bottom: 25px; }
+
+        .btn-group { display: flex; justify-content: center; gap: 15px; }
+        
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-yes { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4); }
+        .btn-yes:hover { transform: scale(1.05); }
+
+        .btn-no { background: #e9ecef; color: #495057; position: relative; }
+
+        /* LAYER 2 (OVERLAY) */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #800f2f 0%, #ff4d6d 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .gift-box {
+            font-size: 100px;
+            cursor: pointer;
+            animation: shake 2.5s infinite;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.3));
+        }
+
+        .gift-box:hover { transform: scale(1.1); }
+
+        .surprise-content {
+            display: none;
+            text-align: center;
+            max-width: 85%;
+            animation: popUp 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .surprise-content img {
+            width: 200px;
+            height: auto; /* Auto biar proporsional sesuai GIF */
+            border-radius: 20px;
+            border: 4px solid rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .surprise-content h2 { 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+            color: white; /* Judul Putih */
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* --- PERBAIKAN DI SINI --- */
+        /* Kita paksa p di dalam surprise-content jadi putih */
+        .surprise-content p { 
+            color: white !important; 
+            font-size: 1.1rem; 
+            line-height: 1.5; 
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Bayangan hitam agar teks putih 'pop' */
+        }
+
+        /* Animasi */
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: rotate(-4deg); }
+            20%, 40%, 60%, 80% { transform: rotate(4deg); }
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px; height: 12px;
+            background-color: var(--primary);
+            animation: fall linear forwards;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainCard">
+        <h1>Hai Kakk! ❤️</h1>
+        <p>Ada sesuatu yang ingin aku sampaikan, tapi enggak seru kalau langsung dibilang.</p>
+        <h3>Mau liat kejutan kecil dari aku?</h3>
+        
+        <div class="btn-group">
+            <button class="btn-yes" onclick="showGift()">MAU BANGET!</button>
+            <button class="btn-no" id="btnNo" onmouseover="dodge()">GAK MAU</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="gift-box" id="giftBox" onclick="openGift()">🎁</div>
+        
+        <div class="surprise-content" id="surpriseContent">
+            
+            <img src="https://media1.tenor.com/m/BxibqUT9-I0AAAAC/dudu-flower.gif" alt="Dudu Bunga">
+            
+            <h2>Happy Valentine's Day kakk! 🌹</h2>
+            
+            <p>Ini cuma hal kecil, tapi semoga bisa bikin kakk senyum hari ini ya.  <br> Semoga hari kakk indah terus!</p>
+            
+        </div>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btnNo');
+        
+        function dodge() {
+            const limitX = window.innerWidth * 0.3; 
+            const limitY = window.innerHeight * 0.3;
+            const x = Math.random() * (limitX * 2) - limitX;
+            const y = Math.random() * (limitY * 2) - limitY;
+            btnNo.style.transition = "transform 0.2s ease-out";
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        function showGift() {
+            const mainCard = document.getElementById('mainCard');
+            mainCard.style.opacity = '0';
+            mainCard.style.transform = 'translateY(-20px) scale(0.9)';
+            
+            setTimeout(() => {
+                mainCard.style.display = 'none';
+                document.getElementById('overlay').classList.add('active');
+            }, 400);
+        }
+
+        function openGift() {
+            const giftBox = document.getElementById('giftBox');
+            const content = document.getElementById('surpriseContent');
+            
+            giftBox.style.transform = 'scale(0.1) rotate(20deg)';
+            giftBox.style.opacity = '0';
+            
+            setTimeout(() => {
+                giftBox.style.display = 'none';
+                content.style.display = 'block';
+                spawnConfetti();
+            }, 300);
+        }
+
+        function spawnConfetti() {
+            const colors = ['#ff4d6d', '#ff8fa3', '#fff', '#ffd700', '#ffcccb'];
+            const confettiCount = 80;
+
+            for (let i = 0; i < confettiCount; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = -20 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const size = Math.random() * 10 + 5;
+                conf.style.width = size + 'px';
+                conf.style.height = size + 'px';
+                conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                conf.style.animationDelay = Math.random() * 0.5 + 's';
+
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
